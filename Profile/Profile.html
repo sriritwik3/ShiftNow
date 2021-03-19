@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Profile Page</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./fontawesome/css/all.css">
+    <link rel="stylesheet" href="./rugvedh.css">
+    <link rel="stylesheet" href="./bootstrap.css">
+</head>
+
+<body>
+
+    <!--------------------------------------------------------------------------------------------------------------------------------------------------->
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Shift Now</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home
+                  <span class="sr-only">(current)</span>
+                </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fa fa-user fa-2x"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <div class="profile-option">
+                            <div class="notification">
+                                <i class="fa fa-bell"></i>
+                                <span class="alert-message">2</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!--------------------------------------------------------------------------------------------------------------------------------------------------->
+
+    <div class="container">
+        <div class="profile-header">
+            <div class="profile-img">
+                <img src="./profile photo.jpg" width="200" alt="No img found">
+            </div>
+            <div class="profile-nav-info">
+                <h3 class="user-name">Rugvedh</h3>
+                <div class="address">
+                    <p class="state">Telangana</p>
+                    <span class="country">India</span>
+                </div>
+            </div>
+            <div class="profile-option">
+                <div class="notification">
+                    <i class="fa fa-bell"></i>
+                    <span class="alert-message">2</span>
+                </div>
+            </div>
+        </div>
+        <div class="main-bd">
+            <div class="left-side">
+                <div class="profile-side">
+                    <p class="mobile-number">
+                        <i class="fa fa-phone"></i>+9155565656
+                    </p>
+                    <p class="user-mail">
+                        <i class="fa fa-envelope"></i>rugvedhvaidya123@gmail.com
+                    </p>
+                    <div class="user-bio">
+                        <h3>Bio</h3>
+                        <p class="bio">Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda id rerum saepe suscipit temporibus necessitatibus quia. Obcaecati perferendis iure consequuntur eius, id quidem porro. Rem dignissimos totam iure minus assumenda!
+                            Lorem ipsum dolor sit amet consectetur, loremadipisicing elit. Consectetur, hic.Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nisi ipsa cum beatae optio itaque veritatis.</p>
+                    </div>
+                    <div class="profile-btn">
+                        <button class="chatbtn">
+                            <i class="fa fa-comment"></i>Chat
+                        </button>
+                        <button class="createbtn">
+                            <i class="fa fa-plus"></i>Add Prop
+                        </button>
+                    </div>
+                    <div class="user-rating">
+                        <h3 class="rating">4.5</h3>
+                        <div class="rate">
+                            <div class="stars">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <span class="no-user"><span>123</span>&nbsp;&nbsp;reviews</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="right-side">
+                <div class="nav">
+                    <ul>
+                        <li onclick="tabs(0)" class="user-post active"><i class="fa fa-house-user fa-2x"></i></li>
+                        <li onclick="tabs(1)" class="user-review"><i class="fa fa-shopping-cart fa-2x"></i></li>
+                        <li onclick="tabs(2)" class="user-setting"><i class="fa fa-user-cog fa-2x"></i></li>
+                    </ul>
+                </div>
+                <div class="profile-body">
+                    <div class="profile-posts tab">
+                        <h1>Your Posts</h1>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse non minus dolorum tenetur fugiat, eligendi dolore id excepturi sit animi.</p>
+                    </div>
+                    <div class="profile-reviews tab">
+                        <h1>User Reviews</h1>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates dolore natus et, exercitationem dolorum amet.</p>
+                    </div>
+                    <div class="profile-settings tab">
+                        <h1>Account Settings</h1>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt, veniam.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="#" class="float">
+        <i class="fa fa-envelope my-float"></i>
+    </a>
+    <div class="label-container">
+        <div class="label-text">Feedback</div>
+        <i class="fa fa-play label-arrow"></i>
+    </div>
+
+    <script src="./jquery.js"></script>
+    <script src="./main.js"></script>
+    <script src="./bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
