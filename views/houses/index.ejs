@@ -1,0 +1,95 @@
+<% layout('layouts/boilerplate') %>
+
+    <style>
+        .house-card {
+            height: 180px;
+            background-color: white;
+            margin: 10px 0;
+        }
+
+        .house-image {
+            height: 180px;
+            width: 220px;
+        }
+
+        .house-details {
+            padding: 10px;
+            width: 550px;
+        }
+
+        .house-description {
+            font-size: 12px
+        }
+
+        .get-details-button {
+            margin-left: 5px;
+            height: 5vh;
+            width: 100px;
+            border-radius: 10px;
+        }
+
+        .house-ratings {
+            padding: 10px;
+            border-left-style: dashed;
+            border-left-width: 2px;
+            width: 200px;
+        }
+
+        .house-icons {
+            width: 20px;
+            height: 20px;
+            margin: 0 7px;
+        }
+    </style>
+
+    <h1>All Houses</h1>
+
+    <% for(let house of houses) {%>
+
+        <div class="house-card border border-dark">
+            <div class="d-flex flex-row justify-content-start">
+                <img class="house-image" src="<%= house.image %> " alt="">
+                <div class="house-details d-flex flex-column justify-content-start">
+                    <p>
+                        <%= house.location %> <b> (<%= house.roomType %> )
+                            </b>
+                    </p>
+                    <p class="house-description">
+                        <%= house.description %>
+                    </p>
+                    <div class="d-flex flex-row justify-content-start">
+                        <button class="get-details-button btn-primary"
+                            onclick="location.href='/houses/<%= house._id %>'">Get Details</button>
+                    </div>
+                    <div class="d-flex flex-row justify-content-end">
+                        <i class="bi bi-file-ppt-fill house-icons "></i>
+                        <i class="bi bi-server house-icons "></i>
+                        <i class="bi bi-shield-fill-check house-icons "></i>
+                        <i class="bi bi-battery-full house-icons "></i>
+                        <i class="bi bi-chat-dots house-icons "></i>
+                    </div>
+                </div>
+                <div class="house-ratings">
+                    <div class="d-flex flex-column justify-content-start">
+                        <div>
+                            <span class="bi bi-star-fill"></span>
+                            <span class="bi bi-star-fill"></span>
+                            <span class="bi bi-star-fill"></span>
+                            <span class="bi bi-star-half"></span>
+                            <span class="bi bi-star"></span>
+                        </div>
+                        <div>
+                            <p>Rating : <%= house.rating %>
+                            </p>
+                        </div>
+                        <p><b><i class="bi bi-rupee-sign"></i>
+                                Rs.<%= house.price %>
+                            </b></p>
+                        <button class="btn-warning">Wishlist</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <% } %>
