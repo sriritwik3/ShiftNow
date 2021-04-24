@@ -4,9 +4,10 @@ const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const House = require('./models/house');
 const ejsMate = require('ejs-mate');
-const {houseSchema} = require('./schemas.js');
+const { houseSchema, reviewSchema } = require('./schemas.js');
 const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
+const Review = require('./models/review');
 
 
 mongoose.connect('mongodb://localhost:27017/shiftnow', {
@@ -41,6 +42,15 @@ const validateHouse = (req, res, next) => {
 	}
 }
 
+const validateReview = (req, res, next) => {
+	const { error } = reviewSchema.validate(req.body);
+	if (error) {
+		const msg = error.details.map(el => el.message).join(',')
+		throw new ExpressError(msg, 400)
+	} else {
+		next();
+	}
+}
 
 app.get('/', (req, res) => {
 	res.render('home')
@@ -55,7 +65,7 @@ app.get('/houses/new', (req, res) => {
 	res.render('houses/new')
 });
 
-app.post('/houses',validateHouse, catchAsync(async (req, res, next) => {
+app.post('/houses', validateHouse, catchAsync(async (req, res, next) => {
 	// if (!req.body.house) throw new ExpressError('Invalid House Data', 400);
 	const house = new House(req.body.house);
 	await house.save();
@@ -64,8 +74,14 @@ app.post('/houses',validateHouse, catchAsync(async (req, res, next) => {
 }))
 
 app.get('/houses/:id', catchAsync(async (req, res) => {
-	const house = await House.findById(req.params.id)
-	res.render('houses/show', { house })
+	const house = await House.findById(req.params.id).populate('reviews');
+	let totalRating = 0;
+	let count = 0;
+	for(let rat of house.reviews){
+		totalRating = totalRating + rat.rating;
+		count = count + 1;
+	}
+	res.render('houses/show', { house, totalRating, count })
 }));
 
 app.get('/houses/:id/edit', catchAsync(async (req, res) => {
@@ -84,6 +100,22 @@ app.delete('/houses/:id', catchAsync(async (req, res) => {
 	await House.findByIdAndDelete(id);
 	res.redirect('/houses');
 }));
+
+app.post('/houses/:id/reviews', validateReview, catchAsync(async (req, res) => {
+	const house = await House.findById(req.params.id);
+	const review = new Review(req.body.review);
+	house.reviews.push(review);
+	await review.save();
+	await house.save();
+	res.redirect(`/houses/${house._id}`);
+}));
+
+app.delete('/houses/:id/reviews/:reviewId', catchAsync(async (req, res) => {
+	const { id, reviewId } = req.params;
+	await House.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+	await Review.findByIdAndDelete(reviewId);
+	res.redirect(`/houses/${id}`);
+}))
 
 app.all('*', (req, res, next) => {
 	next(new ExpressError('Page Not Found', 404))
