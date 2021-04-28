@@ -17,51 +17,61 @@
                         <%= house.location %>
                     </li>
                     <li class="list-group-item">Rs.<%= house.price %>/month</li>
-                    <li class="list-group-item">Rating : 2</li>
+                    <li class="list-group-item">Owner of the property : <%= house.owner.username %>
+                    </li>
                 </ul>
-                <div class="card-body">
-                    <a href="/houses/<%= house._id %>/edit" class="card-link btn btn-warning">Edit</a>
-                    <form action="/houses/<%= house._id %>?_method=DELETE" method="POST" class="d-inline">
-                        <button class="btn btn-danger">Delete</button>
-                    </form>
-                </div>
-                <div class="card-footer text-muted">
-                    2 months ago
-                </div>
+                <% if(currentUser && house.owner.equals(currentUser._id)) { %>
+                    <div class="card-body">
+                        <a href="/houses/<%= house._id %>/edit" class="card-link btn btn-warning">Edit</a>
+                        <form action="/houses/<%= house._id %>?_method=DELETE" method="POST" class="d-inline">
+                            <button class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                    <% } %>
+                        <div class="card-footer text-muted">
+                            2 months ago
+                        </div>
             </div>
         </div>
         <div class="col-6">
-            <h2>Leave a Review</h2>
-            <form action="/houses/<%= house._id %>/reviews" method="POST" class="mb-3 validated-form" novalidate>
-                <div class="mb-3">
-                    <label for="rating" class="form-label">Rating</label>
-                    <input type="range" name="review[rating]" id="rating" class="form-range" min="1" max="5">
-                </div>
-                <div class="mb-3">
-                    <label for="body" class="form-label">Review</label>
-                    <textarea name="review[body]" id="body" cols="30" rows="3" class="form-control" required></textarea>
-                    <div class="valid-feedback">
-                        Looks good!
+            <% if(currentUser) { %>
+                <h2>Leave a Review</h2>
+                <form action="/houses/<%= house._id %>/reviews" method="POST" class="mb-3 validated-form" novalidate>
+                    <div class="mb-3">
+                        <label for="rating" class="form-label">Rating</label>
+                        <input type="range" name="review[rating]" id="rating" class="form-range" min="1" max="5">
                     </div>
-                </div>
-                <button class="btn btn-success">submit</button>
-            </form>
-            <% for(let review of house.reviews) { %>
-                <div class="card mb-3">
-                    <div class=" card-body">
-                        <h5 class="card-title">
-                            Rating : <%= review.rating %>
-                        </h5>
-                        <p class="card-text">
-                            Review : <%= review.body %>
-                        </p>
-                        <form action="/houses/<%= house._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
-                            <button class="btn btn-sm btn-danger">Delete</button>
-                        </form>
+                    <div class="mb-3">
+                        <label for="body" class="form-label">Review</label>
+                        <textarea name="review[body]" id="body" cols="30" rows="3" class="form-control"
+                            required></textarea>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
                     </div>
-                </div>
+                    <button class="btn btn-success">submit</button>
+                </form>
                 <% } %>
+                    <% for(let review of house.reviews) { %>
+                        <div class="card mb-3">
+                            <div class=" card-body">
+                                <h5 class="card-title">
+                                    Rating : <%= review.rating %>
+                                </h5>
+                                <h6 class="card-subtitle mb-2 text-muted">
+                                    By <%= review.author.username %>
+                                </h6>
+                                <p class="card-text">
+                                    Review : <%= review.body %>
+                                </p>
+                                <% if(currentUser && review.author.equals(currentUser._id)) { %>
+                                    <form action="/houses/<%= house._id %>/reviews/<%= review._id %>?_method=DELETE"
+                                        method="POST">
+                                        <button class="btn btn-sm btn-danger">Delete</button>
+                                    </form>
+                                    <% } %>
+                            </div>
+                        </div>
+                        <% } %>
         </div>
     </div>
-
-    

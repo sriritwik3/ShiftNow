@@ -9,6 +9,10 @@ const HouseSchema = new Schema({
     location: String,
     price: Number,
     description: String,
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+    },
     reviews: [
         {
             type: Schema.Types.ObjectId,

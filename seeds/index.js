@@ -26,6 +26,7 @@ const seedDB = async () => {
         const rating = Math.floor(Math.random() * 5) + 1;
 
         const home = new House({
+            owner: '6085b4f65bed7b0c0412dced',
             location: `${cities[random1000].city}, ${cities[random1000].state}`,
             roomType: `${sample(rooms.room)}`,
             image: 'https://source.unsplash.com/collection/4666484',

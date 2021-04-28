@@ -6,9 +6,13 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require('./models/user');
 
-const houses = require('./routes/houses');
-const reviews = require('./routes/reviews');
+const houseRoutes = require('./routes/houses');
+const reviewRoutes = require('./routes/reviews');
+const userRoutes = require('./routes/users');
 
 
 mongoose.connect('mongodb://localhost:27017/shiftnow', {
@@ -47,18 +51,32 @@ const sessionConfig = {
 	}
 }
 
-app.use(session(sessionConfig))
+app.use(session(sessionConfig));
 app.use(flash());
 
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
 
-app.use((req,res,next) =>{
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+
+app.use((req, res, next) => {
+	if(!['/login', '/'].includes(req.originalUrl)) {
+		req.session.returnTO = req.originalUrl;
+	}
+	res.locals.currentUser = req.user;
 	res.locals.success = req.flash('success');
 	res.locals.error = req.flash('error');
 	next();
 })
 
-app.use('/houses', houses);
-app.use('/houses/:id/reviews', reviews);
+
+app.use('/', userRoutes)
+app.use('/houses', houseRoutes)
+app.use('/houses/:id/reviews', reviewRoutes)
+
 
 
 
