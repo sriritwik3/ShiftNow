@@ -1,0 +1,9 @@
+<% layout('layouts/boilerplate') %>
+
+
+    <% for(let house of houses) {%>
+        <div class="mb-3">
+            <%= house.location %> <br>
+                Rs.<%= house.price %>
+        </div>
+        <% } %>
