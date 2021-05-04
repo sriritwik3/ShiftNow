@@ -1,0 +1,21 @@
+<% layout('layouts/boilerplate') %>
+
+    <div class="row">
+        <div class="col-md-4">
+            <h1>
+                <%= user.username %>
+            </h1>
+            <h2>
+                <%= user.email %>
+            </h2>
+            <h2>
+                <%= user.phone %>
+            </h2>
+        </div>
+        <div class="col-md-8">
+            <% houses.forEach(function(house){ %>
+                <%= house.location %> 
+                <%= house.roomType %> 
+                <% }); %>
+        </div>
+    </div>
