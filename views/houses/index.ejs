@@ -2,6 +2,15 @@
 
     <link rel="stylesheet" href="/css/searchpage.css">
 
+    <div class="mb-3">
+        <form action="/houses" method="GET">
+            <div class="mb-3">
+                <input type="text" name="search">
+            </div>
+            <button type="submit">search</button>
+        </form>
+    </div>
+
     <h1>All Houses</h1>
 
     <% for(let house of houses) {%>
@@ -45,7 +54,9 @@
                         <p><b><i class="bi bi-rupee-sign"></i>
                                 Rs.<%= house.price %>
                             </b></p>
-                        <button class="btn-warning">Wishlist</button>
+                        <form action="/profile/wishlist/<%= house._id %>" method="POST">
+                            <button type="submit" name="wish" class="btn btn-warning">Wishlist</button>
+                        </form>
                     </div>
                 </div>
             </div>

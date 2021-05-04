@@ -10,8 +10,21 @@ const { isLoggedIn, validateHouse, isOwner } = require('../middleware');
 
 
 router.get('/', catchAsync(async (req, res) => {
-	const houses = await House.find({});
-	res.render('houses/index', { houses })
+
+	const { search } = req.query;
+	if (!search) {
+		const houses = await House.find({});
+		res.render('houses/index', { houses })
+	} else {
+		const houses = await House.find({ $text: { $search: search } })
+		if (houses.length < 1) {
+			const home = await House.find({});
+			res.render('houses/index', { houses: home })
+		} else {
+			res.render('houses/index', { houses })
+		}
+
+	}
 }));
 
 router.get('/new', isLoggedIn, (req, res) => {

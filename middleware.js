@@ -36,6 +36,16 @@ module.exports.isOwner = async (req, res, next) => {
     next();
 }
 
+module.exports.isOwnerNeg = async (req, res, next) => {
+    const { id } = req.params;
+    const house = await House.findByIdAndUpdate(id);
+    if (house.owner.equals(req.user._id)) {
+        req.flash('error', 'You cannot do this');
+        return res.redirect('/houses')
+    }
+    next();
+}
+
 module.exports.validateReview = (req, res, next) => {
     const { error } = reviewSchema.validate(req.body);
     if (error) {

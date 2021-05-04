@@ -8,11 +8,14 @@ const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const House = require('./models/house');
 const User = require('./models/user');
+const Wishlist = require('./models/wishlist');
 
 const houseRoutes = require('./routes/houses');
 const reviewRoutes = require('./routes/reviews');
 const userRoutes = require('./routes/users');
+const { isLoggedIn, isOwner, isOwnerNeg } = require('./middleware');
 
 
 mongoose.connect('mongodb://localhost:27017/shiftnow', {
@@ -63,7 +66,7 @@ passport.deserializeUser(User.deserializeUser());
 
 
 app.use((req, res, next) => {
-	if(!['/login', '/'].includes(req.originalUrl)) {
+	if (!['/login', '/'].includes(req.originalUrl)) {
 		req.session.returnTO = req.originalUrl;
 	}
 	res.locals.currentUser = req.user;
@@ -84,6 +87,36 @@ app.get('/', (req, res) => {
 	res.render('home')
 });
 
+
+
+app.get('/profile/wishlist', isLoggedIn, async (req, res) => {
+	const wishlist = await Wishlist.find({ "user": `${req.user._id}` });
+	if (wishlist.length < 1) {
+		req.flash('error', 'No wishlisted houses');
+		return res.redirect('/houses')
+	} else {
+		const houses = await House.find({ '_id': { $in: wishlist[0].home } });
+		res.render('users/wishlist', { houses })
+	}
+})
+
+app.post('/profile/wishlist/:id', isLoggedIn, isOwnerNeg, async (req, res) => {
+	const house = await House.findById(req.params.id);
+	let wishlist = await Wishlist.find({ "user": `${req.user._id}` });
+	if (wishlist.length > 0) {
+		wishlist[0].home.push(house)
+		await wishlist[0].save();
+		req.flash('success', 'Added to wishlist');
+		res.redirect('/houses');
+	} else {
+		wishlist = new Wishlist;
+		wishlist.user = req.user._id;
+		wishlist.home.push(house)
+		await wishlist.save();
+		req.flash('success', 'Added to wishlist');
+		res.redirect('/houses');
+	}
+})
 
 app.all('*', (req, res, next) => {
 	next(new ExpressError('Page Not Found', 404))

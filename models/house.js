@@ -21,6 +21,9 @@ const HouseSchema = new Schema({
     ]
 });
 
+
+HouseSchema.index({ location: 'text' });
+
 HouseSchema.post('findOneAndDelete', async function(doc){
     if(doc){
         await Review.deleteMany({

@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const User = require('../models/user');
+const House = require('../models/house');
 const catchAsync = require('../utils/catchAsync');
-
+const { isLoggedIn } = require('../middleware');
 
 
 router.get('/signUp', (req, res) => {
@@ -12,8 +13,8 @@ router.get('/signUp', (req, res) => {
 
 router.post('/signUp', catchAsync(async (req, res, next) => {
     try {
-        const { email, username, password } = req.body;
-        const user = new User({ email, username });
+        const { email, username, password, phone } = req.body;
+        const user = new User({ email, username, phone });
         const registeredUser = await User.register(user, password);
         req.login(registeredUser, err => {
             if (err) return next(err);
@@ -42,6 +43,16 @@ router.get('/logout', (req, res) => {
     req.flash('success', 'Successfully logged you out');
     res.redirect('/houses');
 })
+
+
+router.get('/users/:id', isLoggedIn, async (req, res) => {
+    const { id } = req.params;
+    const user = await User.findById(id);
+    console.log(id)
+    const houses = await House.find({ "owner": `${id}` });
+    console.log(houses);
+    res.render('users/show', { user, houses })
+});
 
 
 module.exports = router;
