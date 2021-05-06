@@ -1,18 +1,35 @@
+if (process.env.NODE_ENV !== "production") {
+    require('dotenv').config();
+}
+
+
+
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
-const methodOverride = require('method-override');
-const House = require('./models/house');
 const ejsMate = require('ejs-mate');
-const {houseSchema} = require('./schemas.js');
-const catchAsync = require('./utils/catchAsync');
+const session = require('express-session');
+const flash = require('connect-flash');
 const ExpressError = require('./utils/ExpressError');
+const methodOverride = require('method-override');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const House = require('./models/house');
+const User = require('./models/user');
+const Wishlist = require('./models/wishlist');
+
+const houseRoutes = require('./routes/houses');
+const reviewRoutes = require('./routes/reviews');
+const userRoutes = require('./routes/users');
+const { isLoggedIn, isOwner, isOwnerNeg } = require('./middleware');
+const catchAsync = require('./utils/catchAsync');
 
 
 mongoose.connect('mongodb://localhost:27017/shiftnow', {
 	useNewUrlParser: true,
 	useCreateIndex: true,
-	useUnifiedTopology: true
+	useUnifiedTopology: true,
+	useFindAndModify: false,
 });
 
 const db = mongoose.connection;
@@ -30,60 +47,94 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+app.use(express.static(path.join(__dirname, 'public')));
 
-const validateHouse = (req, res, next) => {
-	const { error } = houseSchema.validate(req.body);
-	if (error) {
-		const msg = error.details.map(el => el.message).join(',')
-		throw new ExpressError(msg, 400)
-	} else {
-		next();
+
+const sessionConfig = {
+	secret: 'thisshouldbeabettersecret',
+	resave: false,
+	saveUninitialized: true,
+	cookie: {
+		httpOnly: true,
+		expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+		maxAge: 1000 * 60 * 60 * 24 * 7
 	}
 }
+
+app.use(session(sessionConfig));
+app.use(flash());
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+
+app.use((req, res, next) => {
+	if (!['/login', '/'].includes(req.originalUrl)) {
+		req.session.returnTO = req.originalUrl;
+	}
+	res.locals.currentUser = req.user;
+	res.locals.success = req.flash('success');
+	res.locals.error = req.flash('error');
+	next();
+})
+
+
+app.use('/', userRoutes)
+app.use('/houses', houseRoutes)
+app.use('/houses/:id/reviews', reviewRoutes)
+
+
 
 
 app.get('/', (req, res) => {
 	res.render('home')
 });
 
-app.get('/houses', catchAsync(async (req, res) => {
-	const houses = await House.find({});
-	res.render('houses/index', { houses })
-}));
 
-app.get('/houses/new', (req, res) => {
-	res.render('houses/new')
-});
 
-app.post('/houses',validateHouse, catchAsync(async (req, res, next) => {
-	// if (!req.body.house) throw new ExpressError('Invalid House Data', 400);
-	const house = new House(req.body.house);
-	await house.save();
-	res.redirect(`/houses/${house._id}`)
+app.get('/profile/wishlist', isLoggedIn, async (req, res) => {
+	const wishlist = await Wishlist.find({ "user": `${req.user._id}` });
+	if (wishlist.length < 1) {
+		req.flash('error', 'No wishlisted houses');
+		return res.redirect('/houses')
+	} else {
+		const houses = await House.find({ '_id': { $in: wishlist[0].home } });
+		res.render('users/wishlist', { houses })
+	}
+})
 
-}))
+app.post('/profile/wishlist/:id', isLoggedIn, isOwnerNeg, async (req, res) => {
+	const house = await House.findById(req.params.id);
+	let wishlist = await Wishlist.find({ "user": `${req.user._id}` });
+	if (wishlist.length > 0) {
+		wishlist[0].home.push(house)
+		await wishlist[0].save();
+		req.flash('success', 'Added to wishlist');
+		res.redirect('/houses');
+	} else {
+		wishlist = new Wishlist;
+		wishlist.user = req.user._id;
+		wishlist.home.push(house)
+		await wishlist.save();
+		req.flash('success', 'Added to wishlist');
+		res.redirect('/houses');
+	}
+})
 
-app.get('/houses/:id', catchAsync(async (req, res) => {
-	const house = await House.findById(req.params.id)
-	res.render('houses/show', { house })
-}));
 
-app.get('/houses/:id/edit', catchAsync(async (req, res) => {
-	const house = await House.findById(req.params.id)
-	res.render('houses/edit', { house })
-}));
-
-app.put('/houses/:id', validateHouse, catchAsync(async (req, res) => {
+app.delete('/profile/wishlist/:id', isLoggedIn, catchAsync(async (req, res) => {
 	const { id } = req.params;
-	const house = await House.findByIdAndUpdate(id, { ...req.body.house });
-	res.redirect(`/houses/${house._id}`)
+	const wishlist = await Wishlist.find({ "user": `${req.user._id}` });
+	
+	await Wishlist.findByIdAndUpdate(wishlist[0]._id, { $pull: { home: id } });
+	req.flash('success', 'Successfully removed from wishlist');
+	res.redirect('/profile/wishlist');
 }));
 
-app.delete('/houses/:id', catchAsync(async (req, res) => {
-	const { id } = req.params;
-	await House.findByIdAndDelete(id);
-	res.redirect('/houses');
-}));
 
 app.all('*', (req, res, next) => {
 	next(new ExpressError('Page Not Found', 404))

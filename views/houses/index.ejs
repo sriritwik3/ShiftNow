@@ -1,95 +1,144 @@
 <% layout('layouts/boilerplate') %>
 
-    <style>
-        .house-card {
-            height: 180px;
-            background-color: white;
-            margin: 10px 0;
-        }
+    <link rel="stylesheet" href="/css/searchpage.css">
+    <link rel="stylesheet" href="/css/searchbar.css">
+    <link rel="stylesheet" href="/css/filter.css">
 
-        .house-image {
-            height: 180px;
-            width: 220px;
-        }
 
-        .house-details {
-            padding: 10px;
-            width: 550px;
-        }
 
-        .house-description {
-            font-size: 12px
-        }
-
-        .get-details-button {
-            margin-left: 5px;
-            height: 5vh;
-            width: 100px;
-            border-radius: 10px;
-        }
-
-        .house-ratings {
-            padding: 10px;
-            border-left-style: dashed;
-            border-left-width: 2px;
-            width: 200px;
-        }
-
-        .house-icons {
-            width: 20px;
-            height: 20px;
-            margin: 0 7px;
-        }
-    </style>
+    <div class="container d-flex justify-content-center">
+        <div class="card mt-5 p-4">
+            <form action="/houses" method="GET">
+                <div class="input-group mb-3"> <input type="text" name="search" class="form-control">
+                    <div class="input-group-append"><button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search"></i></button></div>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <h1>All Houses</h1>
 
-    <% for(let house of houses) {%>
+    <div class="row">
 
-        <div class="house-card border border-dark">
-            <div class="d-flex flex-row justify-content-start">
-                <img class="house-image" src="<%= house.image %> " alt="">
-                <div class="house-details d-flex flex-column justify-content-start">
-                    <p>
-                        <%= house.location %> <b> (<%= house.roomType %> )
-                            </b>
-                    </p>
-                    <p class="house-description">
-                        <%= house.description %>
-                    </p>
-                    <div class="d-flex flex-row justify-content-start">
-                        <button class="get-details-button btn-primary"
-                            onclick="location.href='/houses/<%= house._id %>'">Get Details</button>
+        <div class="my-2 col-md-4">
+            <div class="border border-dark">
+                <form action="/houses/filters" method="GET">
+                    <div class="m-3">
+                        <h6>Appartment Type</h6>
+                        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                            <input type="checkbox" class="btn-check" id="1RK" autocomplete="off" name="aptType" value="1RK">
+                            <label class="btn btn-outline-primary" for="1RK">1RK</label>
+
+                            <input type="checkbox" class="btn-check" id="1BHK" autocomplete="off" name="aptType" value="1BHK">
+                            <label class="btn btn-outline-primary" for="1BHK">1BHK</label>
+
+                            <input type="checkbox" class="btn-check" id="2BHK" autocomplete="off" name="aptType" value="2BHK">
+                            <label class="btn btn-outline-primary" for="2BHK">2BHK</label>
+
+                            <input type="checkbox" class="btn-check" id="3BHK" autocomplete="off" name="aptType" value="3BHK">
+                            <label class="btn btn-outline-primary" for="3BHK">3BHK</label>
+
+                            <input type="checkbox" class="btn-check" id="4+BHK" autocomplete="off" name="aptType" value="4+ BHK">
+                            <label class="btn btn-outline-primary" for="4+BHK">4+ BHK</label>
+                        </div>
                     </div>
-                    <div class="d-flex flex-row justify-content-end">
-                        <i class="bi bi-file-ppt-fill house-icons "></i>
-                        <i class="bi bi-server house-icons "></i>
-                        <i class="bi bi-shield-fill-check house-icons "></i>
-                        <i class="bi bi-battery-full house-icons "></i>
-                        <i class="bi bi-chat-dots house-icons "></i>
+                    <div class="filter-type">
+                        <label for="rent-range"><b>RENT</b></label><br>
+                        <input class="range-bar" oninput="outputUpdate(value)" type="range" name="rentRange"
+                            id="rentRange" min="0" max="100" step="5"><br>
+                        <output for="rentRange" id="volume">50K</output>
                     </div>
-                </div>
-                <div class="house-ratings">
-                    <div class="d-flex flex-column justify-content-start">
+                    <div class="filter-type">
+                        <p><b>AVAILABILITY </b></p>
                         <div>
-                            <span class="bi bi-star-fill"></span>
-                            <span class="bi bi-star-fill"></span>
-                            <span class="bi bi-star-fill"></span>
-                            <span class="bi bi-star-half"></span>
-                            <span class="bi bi-star"></span>
+                            <input type="radio" name="availability" value="Immediate" id="immediate">
+                            <label class="availability" for="immediate">Immediate</label>
                         </div>
                         <div>
-                            <p>Rating : <%= house.rating %>
-                            </p>
+                            <input type="radio" name="availability" value="after 15 days" id="15days">
+                            <label class="availability" for="15days">Within 15 days</label>
                         </div>
-                        <p><b><i class="bi bi-rupee-sign"></i>
-                                Rs.<%= house.price %>
-                            </b></p>
-                        <button class="btn-warning">Wishlist</button>
+                        <div>
+                            <input type="radio" name="availability" value="after 30 days" id="30days">
+                            <label class="availability" for="30days">Within 30 days</label>
+                        </div>
                     </div>
-                </div>
+                    <div class="filter-type">
+                        <p><b>PARKING</b></p>
+                        <div class="filter">
+                            <input type="checkbox" name="parking" value="2-wheeler" id="twowheeler">
+                            <label class="parking" for="twowheeler">Two wheeler</label>
+                        </div>
+                        <div class="filter">
+                            <input type="checkbox" name="parking" value="4-wheeler" id="fourwheeler">
+                            <label class="parking" for="fourwheeler">Four wheeler</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-info m-3">Apply</button>
+                </form>
             </div>
         </div>
 
 
-        <% } %>
+
+        <div class="col-md-8">
+
+            <% for(let house of houses) {%>
+
+                <div class="house-card border border-dark">
+                    <div class="d-flex flex-row justify-content-start">
+                        <img class="house-image" src="<%= house.images[0].url %> " alt="">
+                        <div class="house-details d-flex flex-column justify-content-start">
+                            <p>
+                                <%= house.location %> <b> (<%= house.roomType %> )
+                                    </b>
+                            </p>
+                            <p class="house-description">
+                                <%= house.description %>
+                            </p>
+                            <div class="d-flex flex-row justify-content-start">
+                                <button class="get-details-button btn-primary"
+                                    onclick="location.href='/houses/<%= house._id %>'">Get Details</button>
+                            </div>
+                            <div class="d-flex flex-row justify-content-end">
+                                <i class="bi bi-file-ppt-fill house-icons "></i>
+                                <i class="bi bi-server house-icons "></i>
+                                <i class="bi bi-shield-fill-check house-icons "></i>
+                                <i class="bi bi-battery-full house-icons "></i>
+                                <i class="bi bi-chat-dots house-icons "></i>
+                            </div>
+                        </div>
+                        <div class="house-ratings">
+                            <div class="d-flex flex-column justify-content-start">
+                                <div>
+                                    <span class="bi bi-star-fill"></span>
+                                    <span class="bi bi-star-fill"></span>
+                                    <span class="bi bi-star-fill"></span>
+                                    <span class="bi bi-star-half"></span>
+                                    <span class="bi bi-star"></span>
+                                </div>
+                                <div>
+                                    <p>Total Reviews : <%= house.reviews.length %>
+                                    </p>
+                                </div>
+                                <p><b><i class="bi bi-rupee-sign"></i>
+                                        Rs.<%= house.price %>
+                                    </b></p>
+                                <form action="/profile/wishlist/<%= house._id %>" method="POST">
+                                    <button type="submit" name="wish" class="btn btn-warning">Wishlist</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <% } %>
+
+        </div>
+
+
+    </div>
+
+    <script src="/js/filter.js"></script>

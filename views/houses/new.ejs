@@ -4,7 +4,7 @@
     <div class="row">
         <h1 class="text-center">New House</h1>
         <div class="col-6 offset-3">
-            <form action="/houses" method="POST" novalidate class="validated-form">
+            <form action="/houses" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="roomType" class="form-label">Room Suit</label>
                     <select class="form-select" aria-label="Default select example" id="roomType" name="house[roomType]"
@@ -27,16 +27,9 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="image" class="form-label">Image url</label>
-                    <input type="text" class="form-control" id="image" name="house[image]" required>
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
-                </div>
-                <div class="mb-3">
                     <label for="price" class="form-label">House Price</label>
                     <div class="input-group">
-                        <span class="input-group-text" id="price-label">$</span>
+                        <span class="input-group-text" id="price-label">₹</span>
                         <input type="text" class="form-control" id="price" placeholder="0" aria-label="price"
                             aria-describedby="price-label" name="house[price]" required>
                     </div>
@@ -45,12 +38,28 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="rating" class="form-label">Rating</label>
-                    <input type="text" class="form-control" id="rating" name="house[rating]" >
+                    <label for="availability" class="form-label">Availability</label>
+                    <select class="form-select" aria-label="Default select example" id="availability" name="house[availability]"
+                        required>
+                        <option value="Immediate">Immediately</option>
+                        <option value="after 15 days">After 15 days</option>
+                        <option value="after 30 days">After 30 days</option>
+                    </select>
                     <div class="valid-feedback">
                         Looks good!
                     </div>
-                </div> 
+                </div>
+                <div class="mb-3">
+                    <label for="parking" class="form-label">Parking Availability</label>
+                    <select class="form-select" aria-label="Default select example" id="parking" name="house[parking]"
+                        required>
+                        <option value="2-wheeler">2 Wheeler</option>
+                        <option value="4-wheeler">4 wheeler</option>
+                    </select>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
                 <div class="mb-3">
                     <label for="description" class="form-label">Description</label>
                     <textarea type="text" class="form-control" id="description" name="house[description]"
@@ -58,6 +67,10 @@
                     <div class="valid-feedback">
                         Looks good!
                     </div>
+                </div>
+                <div class="input-group mb-3 custom-file">
+                    <input type="file" class="form-control" id="inputGroupFile02" name="image" multiple>
+                    <label class="input-group-text custom-file-label" for="inputGroupFile02">Upload</label>
                 </div>
                 <div class="mb-3">
                     <button class="btn btn-outline-primary">Add House</button>
