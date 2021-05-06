@@ -6,16 +6,20 @@
 
 
 
+
     <div class="container d-flex justify-content-center">
-        <div class="card mt-5 p-4">
+        <div class="card p-4">
             <form action="/houses" method="GET">
-                <div class="input-group mb-3"> <input type="text" name="search" class="form-control">
+                <div class="input-group mb-3"> <input type="text" name="search" class="form-control border border-dark" placeholder="search for a location">
                     <div class="input-group-append"><button type="submit" class="btn btn-primary">
                             <i class="bi bi-search"></i></button></div>
                 </div>
             </form>
         </div>
     </div>
+
+    <div id="cluster-map" style="width: 100%; height: 500px;"></div>
+
 
     <h1>All Houses</h1>
 
@@ -88,7 +92,12 @@
 
                 <div class="house-card border border-dark">
                     <div class="d-flex flex-row justify-content-start">
-                        <img class="house-image" src="<%= house.images[0].url %> " alt="">
+                        <% if(house.images.length) { %>
+                            <img class="house-image" src="<%= house.images[0].url %> " alt="">
+                            <% }else { %>
+                                <img src="https://res.cloudinary.com/shiftnow/image/upload/v1620150380/ShiftNow/lcc5nwvihijqo58z5zmn.jpg"
+                                    alt="" class="house-image">
+                                <% } %>
                         <div class="house-details d-flex flex-column justify-content-start">
                             <p>
                                 <%= house.location %> <b> (<%= house.roomType %> )
@@ -141,4 +150,11 @@
 
     </div>
 
+
+
+    <script>
+        const mapToken = '<%- process.env.MAPBOX_TOKEN %>';
+        const houses = { features: <%- JSON.stringify(houses) %> }
+    </script>
+    <script src="/js/clusterMap.js"></script>
     <script src="/js/filter.js"></script>
