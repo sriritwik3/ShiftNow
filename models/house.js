@@ -11,6 +11,9 @@ ImageSchema.virtual('thumbnail').get(function () {
     return this.url.replace('/upload', '/upload/w_200');
 });
 
+
+const opts = { toJSON: { virtuals: true } }
+
 const HouseSchema = new Schema({
     roomType: String,
     images: [ImageSchema],
@@ -19,6 +22,17 @@ const HouseSchema = new Schema({
     description: String,
     availability: String,
     parking: String,
+    geometry: {
+        type: {
+            type: String,
+            enum: ['Point'],
+            required: true
+        },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
+    },
     owner: {
         type: Schema.Types.ObjectId,
         ref: 'User',
@@ -29,13 +43,21 @@ const HouseSchema = new Schema({
             ref: 'Review'
         }
     ]
-});
+}, opts);
 
 
 HouseSchema.index({ location: 'text' });
 
-HouseSchema.post('findOneAndDelete', async function(doc){
-    if(doc){
+
+HouseSchema.virtual('properties.popUpMarkup').get(function () {
+    return `
+    <strong><a href="/houses/${this._id}">${this.roomType}</a><strong>
+    <p>Available ${this.availability.substring(0, 20)}...</p >
+`
+});
+
+HouseSchema.post('findOneAndDelete', async function (doc) {
+    if (doc) {
         await Review.deleteMany({
             _id: {
                 $in: doc.reviews

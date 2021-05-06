@@ -1,5 +1,5 @@
 if (process.env.NODE_ENV !== "production") {
-    require('dotenv').config();
+	require('dotenv').config();
 }
 
 
@@ -23,6 +23,7 @@ const reviewRoutes = require('./routes/reviews');
 const userRoutes = require('./routes/users');
 const { isLoggedIn, isOwner, isOwnerNeg } = require('./middleware');
 const catchAsync = require('./utils/catchAsync');
+const user = require('./models/user');
 
 
 mongoose.connect('mongodb://localhost:27017/shiftnow', {
@@ -95,6 +96,13 @@ app.get('/', (req, res) => {
 });
 
 
+app.get('/profile', isLoggedIn, async (req, res) => {
+	const wishlist = await Wishlist.find({ "user": `${req.user._id}` });
+	const wishlistHouses = await House.find({ '_id': { $in: wishlist[0].home } });
+	const houses = await House.find({ "owner": `${req.user._id}` });
+	const user = await User.findById(req.user._id);
+	res.render('users/userProfile', { wishlistHouses, houses, user })
+})
 
 app.get('/profile/wishlist', isLoggedIn, async (req, res) => {
 	const wishlist = await Wishlist.find({ "user": `${req.user._id}` });
@@ -125,11 +133,23 @@ app.post('/profile/wishlist/:id', isLoggedIn, isOwnerNeg, async (req, res) => {
 	}
 })
 
+app.get('/profile/edit', isLoggedIn, catchAsync(async (req, res) => {
+	const user = req.user;
+	res.render('users/edit', { user })
+}));
+
+app.put('/profile/edit', isLoggedIn, catchAsync(async (req, res) => {
+	const { id } = req.user;
+	const updateduser = await User.findByIdAndUpdate(id, { ...req.body });
+	await updateduser.save();
+	req.flash('success', 'Successfully updated the details');
+	res.redirect('/profile')
+}))
 
 app.delete('/profile/wishlist/:id', isLoggedIn, catchAsync(async (req, res) => {
 	const { id } = req.params;
 	const wishlist = await Wishlist.find({ "user": `${req.user._id}` });
-	
+
 	await Wishlist.findByIdAndUpdate(wishlist[0]._id, { $pull: { home: id } });
 	req.flash('success', 'Successfully removed from wishlist');
 	res.redirect('/profile/wishlist');
