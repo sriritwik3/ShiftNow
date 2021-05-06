@@ -2,81 +2,32 @@ const express = require('express');
 const router = express.Router({ mergeParams: true });
 
 const catchAsync = require('../utils/catchAsync');
-
-const House = require('../models/house');
-
 const { isLoggedIn, validateHouse, isOwner } = require('../middleware');
 
+const houses = require('../controllers/houses');
+const multer = require('multer');
+
+const { storage } = require('../cloudinary')
+const upload = multer({ storage })
 
 
-router.get('/', catchAsync(async (req, res) => {
 
-	const { search } = req.query;
-	if (!search) {
-		const houses = await House.find({});
-		res.render('houses/index', { houses })
-	} else {
-		const houses = await House.find({ $text: { $search: search } })
-		if (houses.length < 1) {
-			const home = await House.find({});
-			res.render('houses/index', { houses: home })
-		} else {
-			res.render('houses/index', { houses })
-		}
+router.route('/')
+    .get(catchAsync(houses.index))
+    .post(isLoggedIn, upload.array('image'), validateHouse, catchAsync(houses.createHouse));
 
-	}
-}));
 
-router.get('/new', isLoggedIn, (req, res) => {
-	res.render('houses/new')
-});
 
-router.post('/', isLoggedIn, validateHouse, catchAsync(async (req, res, next) => {
-	const house = new House(req.body.house);
-	house.owner = req.user._id;
-	await house.save();
-	req.flash('success', 'Successfully added a new property');
-	res.redirect(`/houses/${house._id}`)
+router.get('/new', isLoggedIn, houses.renderNewForm);
+router.get('/filters',catchAsync(houses.filter))
 
-}));
+router.route('/:id')
+    .get(catchAsync(houses.showHouse))
+    .put(isLoggedIn, isOwner, upload.array('image'), validateHouse, catchAsync(houses.updateHouse))
+    .delete(isLoggedIn, isOwner, catchAsync(houses.deleteHouse));
 
-router.get('/:id', catchAsync(async (req, res) => {
-	const house = await House.findById(req.params.id).populate({
-		path: 'reviews',
-		populate: {
-			path: 'author'
-		}
-	}).populate('owner');
-	if (!house) {
-		req.flash('error', 'Cannot find the property');
-		res.redirect('/houses');
-	}
-	res.render('houses/show', { house })
-}));
+router.get('/:id/edit', isLoggedIn, isOwner, catchAsync(houses.renderEditForm));
 
-router.get('/:id/edit', isLoggedIn, isOwner, catchAsync(async (req, res) => {
-	const { id } = req.params;
-	const house = await House.findById(id)
-	if (!house) {
-		req.flash('error', 'Cannot find the property');
-		res.redirect('/houses');
-	}
-	res.render('houses/edit', { house })
-}));
-
-router.put('/:id', isLoggedIn, isOwner, validateHouse, catchAsync(async (req, res) => {
-	const { id } = req.params;
-	const house = await House.findByIdAndUpdate(id, { ...req.body.house });
-	req.flash('success', 'Successfully updated the property details');
-	res.redirect(`/houses/${house._id}`)
-}));
-
-router.delete('/:id', isLoggedIn, isOwner, catchAsync(async (req, res) => {
-	const { id } = req.params;
-	await House.findByIdAndDelete(id);
-	req.flash('success', 'Successfully deleted a property');
-	res.redirect('/houses');
-}));
 
 
 module.exports = router;

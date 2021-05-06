@@ -5,7 +5,8 @@
     <div class="row">
         <h1 class="text-center">Edit House</h1>
         <div class="col-6 offset-3">
-            <form action="/houses/<%=house._id%>?_method=PUT" method="POST" novalidate class="validated-form">
+            <form action="/houses/<%=house._id%>?_method=PUT" method="POST" novalidate class="validated-form"
+                enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="roomType" class="form-label">Room Suit</label>
                     <select class="form-select" id="roomType" name="house[roomType]" required>
@@ -28,14 +29,6 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="image" class="form-label">Image url</label>
-                    <input type="text" class="form-control" id="image" name="house[image]" value="<%= house.image %>"
-                        required>
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
-                </div>
-                <div class="mb-3">
                     <label for="price" class="form-label">House Price</label>
                     <div class="input-group">
                         <span class="input-group-text" id="price-label">₹</span>
@@ -47,12 +40,48 @@
                     </div>
                 </div>
                 <div class="mb-3">
+                    <label for="availability" class="form-label">Availability</label>
+                    <select class="form-select" aria-label="Default select example" id="availability" name="house[availability]"
+                        required>
+                        <option value="Immediate" <%=house.availability==='Immediate' ? 'selected' : '' %>>Immediately</option>
+                        <option value="after 15 days" <%=house.availability==='after 15 days' ? 'selected' : '' %>>After 15 days</option>
+                        <option value="after 30 days" <%=house.availability==='after 30 days' ? 'selected' : '' %>>After 30 days</option>
+                    </select>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="parking" class="form-label">Parking Availability</label>
+                    <select class="form-select" aria-label="Default select example" id="parking" name="house[parking]"
+                        required>
+                        <option value="2-wheeler" <%=house.parking==='2-wheeler' ? 'selected' : '' %>>2 Wheeler</option>
+                        <option value="4-wheeler" <%=house.parking==='4-wheeler' ? 'selected' : '' %>>4 wheeler</option>
+                    </select>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <div class="mb-3">
                     <label for="description" class="form-label">Description</label>
                     <textarea type="text" class="form-control" id="description" name="house[description]"
                         required><%= house.description  %> </textarea>
                     <div class="valid-feedback">
                         Looks good!
                     </div>
+                </div>
+                <div class="input-group mb-3 custom-file">
+                    <input type="file" class="form-control" id="inputGroupFile02" name="image" multiple>
+                    <label class="input-group-text custom-file-label" for="inputGroupFile02">Add more images</label>
+                </div>
+                <div class="mb-3">
+                    <% house.images.forEach(function(img, i){ %>
+                        <img src="<%= img.thumbnail %> " class="img-thumbnail" alt="">
+                        <div class="form-check-inline">
+                            <input type="checkbox" name="deleteImages[]" id="image-<%= i %>" value="<%=img.filename%>">
+                        </div>
+                        <label for="image-<%= i %>">Delete</label>
+                        <% }) %>
                 </div>
                 <div class="mb-3">
                     <button class="btn btn-outline-info">Update House</button>

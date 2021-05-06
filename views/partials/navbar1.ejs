@@ -25,23 +25,16 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/profile/wishlist">Wishlist</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="/" data-toggle="dropdown">
-                        Notifications
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="/">Notification 1</a></li>
-                        <li><a class="dropdown-item" href="/"> Notification 2 </a></li>
-                        <li><a class="dropdown-item" href="/">Notification 3</a></li>
-                    </ul>
-                </li>
                 <% if(!currentUser) { %>
+                    <li>
+                        <a href="/signUp" class="nav-link">SignUp</a>
+                    </li>
                     <li class="nav-item">
-                        <a href="/login" class="btn btn-primary">Login</a>
+                        <a href="/login" class="nav-link">Login</a>
                     </li>
                     <% } else { %>
                         <li class="nav-item">
-                            <a href="/logout" class="btn btn-primary">Logout</a>
+                            <a href="/logout" class="nav-link">Logout</a>
                         </li>
                         <% } %>
             </ul>

@@ -1,3 +1,9 @@
+if (process.env.NODE_ENV !== "production") {
+    require('dotenv').config();
+}
+
+
+
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
@@ -16,6 +22,7 @@ const houseRoutes = require('./routes/houses');
 const reviewRoutes = require('./routes/reviews');
 const userRoutes = require('./routes/users');
 const { isLoggedIn, isOwner, isOwnerNeg } = require('./middleware');
+const catchAsync = require('./utils/catchAsync');
 
 
 mongoose.connect('mongodb://localhost:27017/shiftnow', {
@@ -117,6 +124,17 @@ app.post('/profile/wishlist/:id', isLoggedIn, isOwnerNeg, async (req, res) => {
 		res.redirect('/houses');
 	}
 })
+
+
+app.delete('/profile/wishlist/:id', isLoggedIn, catchAsync(async (req, res) => {
+	const { id } = req.params;
+	const wishlist = await Wishlist.find({ "user": `${req.user._id}` });
+	
+	await Wishlist.findByIdAndUpdate(wishlist[0]._id, { $pull: { home: id } });
+	req.flash('success', 'Successfully removed from wishlist');
+	res.redirect('/profile/wishlist');
+}));
+
 
 app.all('*', (req, res, next) => {
 	next(new ExpressError('Page Not Found', 404))
