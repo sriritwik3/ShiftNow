@@ -18,6 +18,9 @@ const House = require('./models/house');
 const User = require('./models/user');
 const Wishlist = require('./models/wishlist');
 const mongoSanitize = require('express-mongo-sanitize');
+const async = require('async');
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 
 
 const houseRoutes = require('./routes/houses');

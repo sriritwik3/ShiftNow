@@ -9,10 +9,10 @@ const UserSchema = new Schema({
         required: true,
         unique: true
     },
-    phone: Number
+    phone: Number,
+    resetPasswordToken: String,
+    resetPasswordExpires: Date
 });
 
 UserSchema.plugin(passportLocalMongoose);
 module.exports = mongoose.model('User', UserSchema);
-
-
