@@ -1,3 +1,4 @@
+//This page consists of all middleware functions used in routes.
 const House = require('./models/house');
 const Review = require('./models/review');
 
@@ -6,7 +7,7 @@ const { houseSchema, reviewSchema } = require('./schemas.js');
 
 
 
-
+//This middleware is used to check whether user is logged into the website.
 module.exports.isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
         req.flash('error', 'You must be signed in');
@@ -15,7 +16,7 @@ module.exports.isLoggedIn = (req, res, next) => {
     next();
 }
 
-
+//This middleware is used to validate the house.
 module.exports.validateHouse = (req, res, next) => {
     const { error } = houseSchema.validate(req.body);
     if (error) {
@@ -26,6 +27,7 @@ module.exports.validateHouse = (req, res, next) => {
     }
 }
 
+//This middleware is used to check whether user is owner of the property.
 module.exports.isOwner = async (req, res, next) => {
     const { id } = req.params;
     const house = await House.findByIdAndUpdate(id);
@@ -36,6 +38,7 @@ module.exports.isOwner = async (req, res, next) => {
     next();
 }
 
+//This middleware is used to check whether the property is not owned by the user.
 module.exports.isOwnerNeg = async (req, res, next) => {
     const { id } = req.params;
     const house = await House.findByIdAndUpdate(id);
@@ -46,6 +49,7 @@ module.exports.isOwnerNeg = async (req, res, next) => {
     next();
 }
 
+//This middleware is used to validate a review.
 module.exports.validateReview = (req, res, next) => {
     const { error } = reviewSchema.validate(req.body);
     if (error) {
@@ -56,6 +60,7 @@ module.exports.validateReview = (req, res, next) => {
     }
 }
 
+//This middleware is used check the given user is author of the review.
 module.exports.isReviewAuthor = async (req, res, next) => {
     const { id, reviewId } = req.params;
     const review = await Review.findByIdAndUpdate(reviewId);

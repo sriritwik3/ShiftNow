@@ -14,13 +14,11 @@
                         <% }) %>
                 </div>
                 <% if(house.images.length> 1) { %>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#houseCarousel"
-                        data-bs-slide="prev">
+                    <button class="carousel-control-prev" type="button" data-bs-target="#houseCarousel" data-bs-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                         <span class="visually-hidden">Previous</span>
                     </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#houseCarousel"
-                        data-bs-slide="next">
+                    <button class="carousel-control-next" type="button" data-bs-target="#houseCarousel" data-bs-slide="next">
                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
                         <span class="visually-hidden">Next</span>
                     </button>
@@ -39,12 +37,17 @@
                     <li class="list-group-item text-muted">
                         <%= house.location %>
                     </li>
-                    <li class="list-group-item">Available: <%= house.availability %>
+                    <li class="list-group-item">Available:
+                        <%= house.availability %>
                     </li>
-                    <li class="list-group-item">Parking Availability: <%= house.parking %>
+                    <li class="list-group-item">Parking Availability:
+                        <%= house.parking %>
                     </li>
-                    <li class="list-group-item">Rs.<%= house.price %>/month</li>
-                    <li class="list-group-item">Owner of the property : <%= house.owner.username %>
+                    <li class="list-group-item">Rs.
+                        <%= house.price %>/month
+                    </li>
+                    <li class="list-group-item">Owner of the property :
+                        <%= house.owner.username %>
                     </li>
                 </ul>
                 <% if(currentUser && house.owner.equals(currentUser._id)) { %>
@@ -69,8 +72,7 @@
                     <div class="mb-3">
                         <fieldset class="starability-basic">
                             <legend>Rating : </legend>
-                            <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1"
-                                checked aria-label="No rating." />
+                            <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
                             <input type="radio" id="first-rate1" name="review[rating]" value="1" />
                             <label for="first-rate1" title="Terrible">1 star</label>
                             <input type="radio" id="first-rate2" name="review[rating]" value="2" />
@@ -85,8 +87,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="body" class="form-label">Review</label>
-                        <textarea name="review[body]" id="body" cols="30" rows="3" class="form-control"
-                            required></textarea>
+                        <textarea name="review[body]" id="body" cols="30" rows="3" class="form-control" required></textarea>
                         <div class="valid-feedback">
                             Looks good!
                         </div>
@@ -101,14 +102,15 @@
                                     <%= review.author.username %>
                                 </h5>
                                 <p class="starability-result" data-rating="<%= review.rating %>">
-                                    Rated: <%= review.rating %> stars
+                                    Rated:
+                                    <%= review.rating %> stars
                                 </p>
                                 <p class="card-text">
-                                    Review : <%= review.body %>
+                                    Review :
+                                    <%= review.body %>
                                 </p>
                                 <% if(currentUser && review.author.equals(currentUser._id)) { %>
-                                    <form action="/houses/<%= house._id %>/reviews/<%= review._id %>?_method=DELETE"
-                                        method="POST">
+                                    <form action="/houses/<%= house._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
                                         <button class="btn btn-sm btn-danger">Delete</button>
                                     </form>
                                     <% } %>
@@ -121,6 +123,6 @@
 
     <script>
         const mapToken = '<%- process.env.MAPBOX_TOKEN %>';
-        const houseMap = <%- JSON.stringify(house) %>
+        const houseMap = <% - JSON.stringify(house) %>
     </script>
     <script src="/js/showPageMap.js"></script>

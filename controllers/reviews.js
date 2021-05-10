@@ -1,6 +1,8 @@
+// This file consists of callback functions which are used by the review routes
 const House = require('../models/house');
 const Review = require('../models/review');
 
+//This function is used to add review to the house.
 
 module.exports.createReview = async (req, res) => {
     const house = await House.findById(req.params.id);
@@ -12,6 +14,8 @@ module.exports.createReview = async (req, res) => {
     req.flash('success', 'Posted a new review');
     res.redirect(`/houses/${house._id}`);
 }
+
+//This function is used to delete review of the house.
 
 module.exports.deleteReview = async (req, res) => {
     const { id, reviewId } = req.params;

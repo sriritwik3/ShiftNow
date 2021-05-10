@@ -1,3 +1,4 @@
+//This file is used to set the constraints to the schemas.
 const BaseJoi = require('joi');
 const sanitizeHtml = require('sanitize-html');
 
@@ -23,6 +24,7 @@ const extension = (joi) => ({
 
 const Joi = BaseJoi.extend(extension)
 
+//Setting constraints to house schemas. 
 module.exports.houseSchema = Joi.object({
     house: Joi.object({
         roomType: Joi.string().required().escapeHTML(),
@@ -35,6 +37,7 @@ module.exports.houseSchema = Joi.object({
     deleteImages: Joi.array()
 });
 
+//Setting constraints to review schemas. 
 module.exports.reviewSchema = Joi.object({
     review: Joi.object({
         rating: Joi.number().required().min(1).max(5),

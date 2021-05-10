@@ -1,3 +1,6 @@
+// This file is used to connect the server and the database.
+// Addresses the scripts/links from external websites for security of the web application.
+// 
 if (process.env.NODE_ENV !== "production") {
     require('dotenv').config();
 }
@@ -73,7 +76,7 @@ const store = MongoDBStore.create({
     touchAfter: 24 * 60 * 60
 });
 
-store.on("error", function(e) {
+store.on("error", function (e) {
     console.log("Session Store Error", e)
 })
 
@@ -183,13 +186,13 @@ app.use('/houses/:id/reviews', reviewRoutes)
 
 
 
-
+// route to render the home page of the website.
 app.get('/', (req, res) => {
     res.render('home')
 });
 
-
-app.get('/profile', isLoggedIn, async(req, res) => {
+// route to display all details of the user.
+app.get('/profile', isLoggedIn, async (req, res) => {
     const wishlist = await Wishlist.find({ "user": `${req.user._id}` });
     const wishlistHouses = await House.find({ '_id': { $in: wishlist[0].home } });
     let i = 0;
@@ -203,7 +206,9 @@ app.get('/profile', isLoggedIn, async(req, res) => {
     res.render('users/userProfile', { wishlistHouses, houses, user, i })
 })
 
-app.get('/profile/wishlist', isLoggedIn, async(req, res) => {
+// route to display all wishlited houses by the user.
+
+app.get('/profile/wishlist', isLoggedIn, async (req, res) => {
     const wishlist = await Wishlist.find({ "user": `${req.user._id}` });
     if (wishlist.length < 1) {
         req.flash('error', 'No wishlisted houses');
@@ -214,7 +219,9 @@ app.get('/profile/wishlist', isLoggedIn, async(req, res) => {
     }
 })
 
-app.post('/profile/wishlist/:id', isLoggedIn, isOwnerNeg, async(req, res) => {
+//post route used to save the wishlited house in the database.
+
+app.post('/profile/wishlist/:id', isLoggedIn, isOwnerNeg, async (req, res) => {
     const house = await House.findById(req.params.id);
     let wishlist = await Wishlist.find({ "user": `${req.user._id}` });
     if (wishlist.length > 0) {
@@ -232,20 +239,23 @@ app.post('/profile/wishlist/:id', isLoggedIn, isOwnerNeg, async(req, res) => {
     }
 })
 
-app.get('/profile/edit', isLoggedIn, catchAsync(async(req, res) => {
+//route to render a form which helps to edit the details of the user.
+app.get('/profile/edit', isLoggedIn, catchAsync(async (req, res) => {
     const user = req.user;
     res.render('users/edit', { user })
 }));
 
-app.put('/profile/edit', isLoggedIn, catchAsync(async(req, res) => {
+//route to change the credentials of the user in the database.
+app.put('/profile/edit', isLoggedIn, catchAsync(async (req, res) => {
     const { id } = req.user;
-    const updateduser = await User.findByIdAndUpdate(id, {...req.body });
+    const updateduser = await User.findByIdAndUpdate(id, { ...req.body });
     await updateduser.save();
     req.flash('success', 'Successfully updated the details');
     res.redirect('/profile')
 }))
 
-app.delete('/profile/wishlist/:id', isLoggedIn, catchAsync(async(req, res) => {
+//route to remove a specific property from the wishlist
+app.delete('/profile/wishlist/:id', isLoggedIn, catchAsync(async (req, res) => {
     const { id } = req.params;
     const wishlist = await Wishlist.find({ "user": `${req.user._id}` });
 
@@ -264,7 +274,6 @@ app.use((err, req, res, next) => {
     if (!err.message) err.message = 'Something went wrong'
     res.status(statusCode).render('error', { err });
 })
-
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

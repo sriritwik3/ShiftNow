@@ -1,7 +1,6 @@
+//Javascript file for validating forms in the web application.
 
-
-
- (function () {
+(function () {
     'use strict'
 
     bsCustomFileInput.init()

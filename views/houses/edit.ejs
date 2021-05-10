@@ -1,3 +1,5 @@
+<!-- This ejs template is used to display the edit form of the property-->
+
 <% layout('layouts/boilerplate') %>
 
     <h1>Edit House</h1>
@@ -41,11 +43,14 @@
                 </div>
                 <div class="mb-3">
                     <label for="availability" class="form-label">Availability</label>
-                    <select class="form-select" aria-label="Default select example" id="availability" name="house[availability]"
-                        required>
-                        <option value="Immediate" <%=house.availability==='Immediate' ? 'selected' : '' %>>Immediately</option>
-                        <option value="after 15 days" <%=house.availability==='after 15 days' ? 'selected' : '' %>>After 15 days</option>
-                        <option value="after 30 days" <%=house.availability==='after 30 days' ? 'selected' : '' %>>After 30 days</option>
+                    <select class="form-select" aria-label="Default select example" id="availability"
+                        name="house[availability]" required>
+                        <option value="Immediate" <%=house.availability==='Immediate' ? 'selected' : '' %>>Immediately
+                        </option>
+                        <option value="after 15 days" <%=house.availability==='after 15 days' ? 'selected' : '' %>>After
+                            15 days</option>
+                        <option value="after 30 days" <%=house.availability==='after 30 days' ? 'selected' : '' %>>After
+                            30 days</option>
                     </select>
                     <div class="valid-feedback">
                         Looks good!

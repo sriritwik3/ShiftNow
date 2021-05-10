@@ -1,3 +1,5 @@
+//This file defines the schema of the house.
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Review = require('./review');
@@ -56,6 +58,7 @@ HouseSchema.virtual('properties.popUpMarkup').get(function () {
 `
 });
 
+// This route is used to delete reviews of the property, when the property is deleted.
 HouseSchema.post('findOneAndDelete', async function (doc) {
     if (doc) {
         await Review.deleteMany({
