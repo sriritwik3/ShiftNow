@@ -1,3 +1,4 @@
+//This file id used to push some intial data to local database.
 const mongoose = require('mongoose');
 const cities = require('./cities');
 const rooms = require('./rooms');
@@ -34,12 +35,12 @@ const seedDB = async () => {
             parking: `${sample(rooms.parking)}`,
             description: " Lorem ipsum dolor sit amet consectetur adipisicing elit.Harum, laudantium iusto ad cumque officiis nesciunt architecto veniam labore reprehenderit iste dolor dolore dicta dignissimos soluta magnam, vero aliquam.Asperiores, ipsam .",
             price,
-            geometry: { 
-                type : "Point", 
-                coordinates : [ 
-                    indiaCities[random1000].longitude, 
+            geometry: {
+                type: "Point",
+                coordinates: [
+                    indiaCities[random1000].longitude,
                     indiaCities[random1000].latitude
-                ] 
+                ]
             },
             images: [
                 {

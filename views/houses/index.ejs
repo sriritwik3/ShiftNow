@@ -49,8 +49,7 @@
                     </div>
                     <div class="filter-type">
                         <label for="rent-range"><b>RENT</b></label><br>
-                        <input class="range-bar" oninput="outputUpdate(value)" type="range" name="rentRange"
-                            id="rentRange" min="0" max="100" step="5"><br>
+                        <input class="range-bar" oninput="outputUpdate(value)" type="range" name="rentRange" id="rentRange" min="0" max="100" step="5"><br>
                         <output for="rentRange" id="volume">50K</output>
                     </div>
                     <div class="filter-type">
@@ -95,50 +94,49 @@
                         <% if(house.images.length) { %>
                             <img class="house-image" src="<%= house.images[0].url %> " alt="">
                             <% }else { %>
-                                <img src="https://res.cloudinary.com/shiftnow/image/upload/v1620150380/ShiftNow/lcc5nwvihijqo58z5zmn.jpg"
-                                    alt="" class="house-image">
+                                <img src="https://res.cloudinary.com/shiftnow/image/upload/v1620150380/ShiftNow/lcc5nwvihijqo58z5zmn.jpg" alt="" class="house-image">
                                 <% } %>
-                        <div class="house-details d-flex flex-column justify-content-start">
-                            <p>
-                                <%= house.location %> <b> (<%= house.roomType %> )
-                                    </b>
-                            </p>
-                            <p class="house-description">
-                                <%= house.description %>
-                            </p>
-                            <div class="d-flex flex-row justify-content-start">
-                                <button class="get-details-button btn-primary"
-                                    onclick="location.href='/houses/<%= house._id %>'">Get Details</button>
-                            </div>
-                            <div class="d-flex flex-row justify-content-end">
-                                <i class="bi bi-file-ppt-fill house-icons "></i>
-                                <i class="bi bi-server house-icons "></i>
-                                <i class="bi bi-shield-fill-check house-icons "></i>
-                                <i class="bi bi-battery-full house-icons "></i>
-                                <i class="bi bi-chat-dots house-icons "></i>
-                            </div>
-                        </div>
-                        <div class="house-ratings">
-                            <div class="d-flex flex-column justify-content-start">
-                                <div>
-                                    <span class="bi bi-star-fill"></span>
-                                    <span class="bi bi-star-fill"></span>
-                                    <span class="bi bi-star-fill"></span>
-                                    <span class="bi bi-star-half"></span>
-                                    <span class="bi bi-star"></span>
-                                </div>
-                                <div>
-                                    <p>Total Reviews : <%= house.reviews.length %>
-                                    </p>
-                                </div>
-                                <p><b><i class="bi bi-rupee-sign"></i>
-                                        Rs.<%= house.price %>
-                                    </b></p>
-                                <form action="/profile/wishlist/<%= house._id %>" method="POST">
-                                    <button type="submit" name="wish" class="btn btn-warning">Wishlist</button>
-                                </form>
-                            </div>
-                        </div>
+                                    <div class="house-details d-flex flex-column justify-content-start">
+                                        <p>
+                                            <%= house.location %> <b> (<%= house.roomType %> )
+                                                </b>
+                                        </p>
+                                        <p class="house-description">
+                                            <%= house.description %>
+                                        </p>
+                                        <div class="d-flex flex-row justify-content-start">
+                                            <button class="get-details-button btn-primary" onclick="location.href='/houses/<%= house._id %>'">Get Details</button>
+                                        </div>
+                                        <div class="d-flex flex-row justify-content-end">
+                                            <i class="bi bi-file-ppt-fill house-icons "></i>
+                                            <i class="bi bi-server house-icons "></i>
+                                            <i class="bi bi-shield-fill-check house-icons "></i>
+                                            <i class="bi bi-battery-full house-icons "></i>
+                                            <i class="bi bi-chat-dots house-icons "></i>
+                                        </div>
+                                    </div>
+                                    <div class="house-ratings">
+                                        <div class="d-flex flex-column justify-content-start">
+                                            <div>
+                                                <span class="bi bi-star-fill"></span>
+                                                <span class="bi bi-star-fill"></span>
+                                                <span class="bi bi-star-fill"></span>
+                                                <span class="bi bi-star-half"></span>
+                                                <span class="bi bi-star"></span>
+                                            </div>
+                                            <div>
+                                                <p>Total Reviews :
+                                                    <%= house.reviews.length %>
+                                                </p>
+                                            </div>
+                                            <p><b><i class="bi bi-rupee-sign"></i>
+                                                    Rs.<%= house.price %>
+                                                </b></p>
+                                            <form action="/profile/wishlist/<%= house._id %>" method="POST">
+                                                <button type="submit" name="wish" class="btn btn-warning">Wishlist</button>
+                                            </form>
+                                        </div>
+                                    </div>
                     </div>
                 </div>
 
@@ -154,7 +152,9 @@
 
     <script>
         const mapToken = '<%- process.env.MAPBOX_TOKEN %>';
-        const houses = { features: <%- JSON.stringify(houses) %> }
+        const houses = {
+            features: <%- JSON.stringify(houses) %>
+        }
     </script>
     <script src="/js/clusterMap.js"></script>
     <script src="/js/filter.js"></script>

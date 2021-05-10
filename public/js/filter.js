@@ -1,3 +1,5 @@
+//Javascript file for functionality of filtering houses using appropriate filters.
+
 function outputUpdate(vol) {
     document.querySelector('#volume').value = vol + "K";
 }

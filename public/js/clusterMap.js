@@ -1,5 +1,3 @@
-
-
 mapboxgl.accessToken = mapToken;
 const map = new mapboxgl.Map({
     container: 'cluster-map',
@@ -10,7 +8,7 @@ const map = new mapboxgl.Map({
 
 map.addControl(new mapboxgl.NavigationControl());
 
-map.on('load', function () {
+map.on('load', function() {
     // Add a new source from our GeoJSON data and
     // set the 'cluster' option to true. GL-JS will
     // add the point_count property to your source data.
@@ -36,8 +34,7 @@ map.on('load', function () {
             //   * Yellow, 30px circles when point count is between 100 and 750
             //   * Pink, 40px circles when point count is greater than or equal to 750
             'circle-color': [
-                'step',
-                ['get', 'point_count'],
+                'step', ['get', 'point_count'],
                 '#00BCD4',
                 10,
                 '#2196F3',
@@ -45,8 +42,7 @@ map.on('load', function () {
                 '#3F51B5'
             ],
             'circle-radius': [
-                'step',
-                ['get', 'point_count'],
+                'step', ['get', 'point_count'],
                 15,
                 10,
                 20,
@@ -82,14 +78,14 @@ map.on('load', function () {
     });
 
     // inspect a cluster on click
-    map.on('click', 'clusters', function (e) {
+    map.on('click', 'clusters', function(e) {
         const features = map.queryRenderedFeatures(e.point, {
             layers: ['clusters']
         });
         const clusterId = features[0].properties.cluster_id;
         map.getSource('houses').getClusterExpansionZoom(
             clusterId,
-            function (err, zoom) {
+            function(err, zoom) {
                 if (err) return;
 
                 map.easeTo({
@@ -104,7 +100,7 @@ map.on('load', function () {
     // the unclustered-point layer, open a popup at
     // the location of the feature, with
     // description HTML from its properties.
-    map.on('click', 'unclustered-point', function (e) {
+    map.on('click', 'unclustered-point', function(e) {
         const coordinates = e.features[0].geometry.coordinates.slice();
         const { popUpMarkup } = e.features[0].properties;
 
@@ -121,12 +117,10 @@ map.on('load', function () {
             .addTo(map);
     });
 
-    map.on('mouseenter', 'clusters', function () {
+    map.on('mouseenter', 'clusters', function() {
         map.getCanvas().style.cursor = 'pointer';
     });
-    map.on('mouseleave', 'clusters', function () {
+    map.on('mouseleave', 'clusters', function() {
         map.getCanvas().style.cursor = '';
     });
 });
-
-

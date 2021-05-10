@@ -1,24 +1,10 @@
+//Javascript file for validating password while signing up and resetting password.
+
 function validator() {
     let p = document.getElementById("password").value;
     let cp = document.getElementById("confirm").value;
-    if (p.length < 8) {
-        document.getElementById('message').innerHTML = "**password must contain 8 characters";
-        return false;
-    }
-    if (!p.match(/[a-z]/g)) {
-        document.getElementById('message').innerHTML = "**password must contain one lowercase letter";
-        return false;
-    }
-    if (!p.match(/[A-Z]/g)) {
-        document.getElementById('message').innerHTML = "**password must contain one Uppercase letter";
-        return false;
-    }
-    if (!p.match(/[0-9]/g)) {
-        document.getElementById('message').innerHTML = "**password must contain one Number";
-        return false;
-    }
-    if (!p.match(/[^a-zA-Z\d]/g)) {
-        document.getElementById('message').innerHTML = "**password must contain one special character";
+    if (p.length < 8 || !p.match(/[a-z]/g) || !p.match(/[A-Z]/g) || !p.match(/[0-9]/g) || !p.match(/[^a-zA-Z\d]/g)) {
+        document.getElementById('message').innerHTML = "**password must contain minimum of 8 characters including One lowercase, One upppercase,One digit and One special character";
         return false;
     }
     if (p != cp) {

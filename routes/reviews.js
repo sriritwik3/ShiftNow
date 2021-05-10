@@ -1,3 +1,6 @@
+//This file is used to display all routes related to reviews.
+//routes to implement CRUD functionality.
+
 const express = require('express');
 const router = express.Router({ mergeParams: true });
 

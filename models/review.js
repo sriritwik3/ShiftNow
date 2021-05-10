@@ -1,3 +1,4 @@
+//This file defines the schema of the reviews.
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
