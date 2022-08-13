@@ -19,4 +19,4 @@ Group Members
 
         Thorlikonda Sai Gopinadh
 
-        Vaidya Rugvedh
+        Sri Ritwik Chekuri
